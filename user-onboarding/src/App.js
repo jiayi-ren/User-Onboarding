@@ -25,7 +25,7 @@ const initialFormErrors = {
 const formSchema = yup.object().shape({
   name: yup
     .string()
-    .required('Name is required!')
+    .required('Name is required')
     .min(3, 'Name must have at least 3 characters!'),
   email: yup
     .string()
@@ -36,9 +36,9 @@ const formSchema = yup.object().shape({
     .required('Password is required')
     .min(8, 'Password must have at least 8 characters!'),
   term: yup
-    .boolean(true)
+    .boolean()
     .required('Please read and accept the terms of service and privacy policy')
-    .oneOf([true], "Please read and accept the terms of service and privacy policy")
+    .oneOf([true], "Please read and accept the terms of service and privacy policy"),
 })
 
 function App() {
@@ -83,6 +83,7 @@ function App() {
   const onInputChange = event =>{
     const name = event.target.name
     const value = event.target.value
+    const checked = event.target.checked
 
     //Form Validation
     yup
@@ -95,7 +96,7 @@ function App() {
         })
       })
       .catch(invalid =>{
-        // debugger
+        console.log(invalid)
         setFormErrors({
           ...formErrors,
           [name]: invalid.message
@@ -111,6 +112,24 @@ function App() {
   const onCheckboxChange = event =>{
     const name = event.target.name
     const isChecked = event.target.checked
+
+    yup
+      .reach(formSchema, name)
+      .validate(isChecked)
+      .then(valid =>{
+        setFormErrors({
+          ...formErrors,
+          [name]: "",
+        })
+      })
+      .catch(invalid =>{
+        console.log(invalid)
+        setFormErrors({
+          ...formErrors,
+          [name]: invalid.message
+        })
+      })
+
     setFormValues({
       ...formValues,
       [name]: isChecked
@@ -131,8 +150,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Registration</h1>
-
+      
       <Form values={formValues} onInputChange={onInputChange} onCheckboxChange={onCheckboxChange} onSubmit={onSubmit} disabled={formDisabled} errors={formErrors}/>
 
       {
