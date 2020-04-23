@@ -24,7 +24,7 @@ const Form = props =>{
                     <input type="checkbox" name='term' checked={values.term} onChange={onCheckboxChange}></input>
                 </label>
                 <p>{errors.term}</p>
-                <button onClick={onSubmit} disabled={disabled}>REGISTER</button>
+                <button name="submit" onClick={onSubmit} disabled={disabled}>REGISTER</button>
             </form>
         </div>
     )
